@@ -1,0 +1,10 @@
+#this is an extra credit assignment
+#imporing pandas
+
+import pandas as pd
+
+#reading the data from the file MOMv3.3.txt
+data = pd.read_csv('MOMv3.txt')
+
+#displaying the header
+print(data.head())
