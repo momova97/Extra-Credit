@@ -137,11 +137,20 @@ for patch, color in zip(box['boxes'], colors):
 
 # Add descriptions and annotations for quantiles and mean line
 quantiles = [0.25, 0.5, 0.75]
+mean_position = 1
+min_position = -0.15
+max_position = -1.15
+
 for i, q in enumerate(quantiles):
-    plt.text(0.5, (i + 1) * 0.25 + 0.1, f'Q{int((i+1)*4)}', color='black', ha='center', va='center', transform=plt.gca().transAxes)
-plt.text(0.5, 1.05, 'Mean', color='black', ha='center', va='center', transform=plt.gca().transAxes)
-plt.text(0.5, -0.15, 'Min', color='black', ha='center', va='center', transform=plt.gca().transAxes)
-plt.text(0.5, -1.15, 'Max', color='black', ha='center', va='center', transform=plt.gca().transAxes)
+    plt.annotate(f'Q{int((i+1)*4)}', xy=(mean_position, (i + 1) * 0.25), color='black',
+                 ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+    
+plt.annotate('Mean', xy=(mean_position, 1.05), color='black',
+             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+plt.annotate('Min', xy=(mean_position, min_position), color='black',
+             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+plt.annotate('Max', xy=(mean_position, max_position), color='black',
+             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
 
 # Set labels, title, and adjust layout
 plt.xlabel('Continent')
