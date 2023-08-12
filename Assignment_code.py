@@ -85,8 +85,8 @@ grouped['mode'] = mode_series
 # Drop rows with NaN mass values
 grouped_cleaned = grouped.dropna()
 
-# Create separate charts for mean, median, and mode
-fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+# Create subplots
+fig, axs = plt.subplots(3, 1, figsize=(8, 18))
 
 # Mean chart
 axs[0].bar(grouped_cleaned.index, grouped_cleaned['mean'], yerr=grouped_cleaned['mean'].std())
@@ -108,6 +108,10 @@ axs[2].set_title('Mode Mass')
 axs[2].set_xlabel('Genus')
 axs[2].set_ylabel('Mass (grams)')
 axs[2].tick_params(axis='x', rotation=45)
+
+# Set y-label for all subplots
+for ax in axs:
+    ax.set_ylabel('Mass (grams)')
 
 # Adjust layout
 plt.tight_layout()
