@@ -124,8 +124,21 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 
 # Create a box plot
 plt.figure(figsize=(10, 6))
-plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False, whis=1.5, showmeans=True, meanline=True)
+plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=True, whis=1.5, showmeans=True, meanline=True)
 plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
+#add descrption for quantiles and mean line
+plt.text(0.5, 1.05, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, 0.95, 'Q1', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, 0.5, 'Median', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, 0.05, 'Q3', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, 0.0, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -0.05, 'Q3', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -0.95, 'Median', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -1.05, 'Q1', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -1.0, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -1.15, 'Min', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.5, -1.2, 'Max', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+
 plt.xlabel('Continent')
 plt.ylabel('Mean Mass (grams)')
 plt.title('Mean Mass of Felis (Genus) Across Continents')
