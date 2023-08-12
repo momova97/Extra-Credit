@@ -125,7 +125,7 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 # Create a box plot
 plt.figure(figsize=(10, 6))
 box = plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values,
-                  vert=True, whis=1.5, showmeans=True, meanline=True, patch_artist=True)
+                  vert=False, whis=1.5, showmeans=True, meanline=True, patch_artist=True)
 
 # Set x-axis ticks and labels
 plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
@@ -142,14 +142,18 @@ min_position = -0.15
 max_position = -1.15
 
 for i, q in enumerate(quantiles):
-    plt.annotate(f'Q{int((i+1)*4)}', xy=(mean_position, (i + 1) * 0.25), color='black',
+    plt.annotate(f'Q{int((i+1)*4)}: {round(np.quantile(filtered_df["Combined Mass (grams)"], q), 2)} g', 
+                 xy=(mean_position, (i + 1) * 0.25), color='black',
                  ha='center', va='center', xytext=(0, 5), textcoords='offset points')
     
-plt.annotate('Mean', xy=(mean_position, 1.05), color='black',
+plt.annotate(f'Mean: {round(filtered_df["Combined Mass (grams)"].mean(), 2)} g', 
+             xy=(mean_position, 1.05), color='black',
              ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-plt.annotate('Min', xy=(mean_position, min_position), color='black',
+plt.annotate(f'Min: {round(filtered_df["Combined Mass (grams)"].min(), 2)} g', 
+             xy=(mean_position, min_position), color='black',
              ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-plt.annotate('Max', xy=(mean_position, max_position), color='black',
+plt.annotate(f'Max: {round(filtered_df["Combined Mass (grams)"].max(), 2)} g', 
+             xy=(mean_position, max_position), color='black',
              ha='center', va='center', xytext=(0, 5), textcoords='offset points')
 
 # Set labels, title, and adjust layout
