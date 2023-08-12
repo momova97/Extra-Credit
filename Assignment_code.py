@@ -124,24 +124,24 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 
 # Create a box plot
 plt.figure(figsize=(10, 6))
-plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values,
-            vert=True, whis=1.5, showmeans=True, meanline=True)
+box = plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values,
+                  vert=True, whis=1.5, showmeans=True, meanline=True, patch_artist=True)
 
 # Set x-axis ticks and labels
 plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
 
+# Set colors for the box plot
+colors = ['lightblue', 'lightgreen', 'lightyellow', 'lightpink', 'lightpurple', 'lightorange']
+for patch, color in zip(box['boxes'], colors):
+    patch.set_facecolor(color)
+
 # Add descriptions and annotations for quantiles and mean line
-plt.text(0.5, 1.05, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, 0.95, 'Q1', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, 0.5, 'Median', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, 0.05, 'Q3', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, 0.0, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -0.05, 'Q3', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -0.95, 'Median', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -1.05, 'Q1', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -1.0, 'Mean', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -1.15, 'Min', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.text(0.5, -1.2, 'Max', horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+quantiles = [0.25, 0.5, 0.75]
+for i, q in enumerate(quantiles):
+    plt.text(0.5, (i + 1) * 0.25 + 0.1, f'Q{int((i+1)*4)}', color='black', ha='center', va='center', transform=plt.gca().transAxes)
+plt.text(0.5, 1.05, 'Mean', color='black', ha='center', va='center', transform=plt.gca().transAxes)
+plt.text(0.5, -0.15, 'Min', color='black', ha='center', va='center', transform=plt.gca().transAxes)
+plt.text(0.5, -1.15, 'Max', color='black', ha='center', va='center', transform=plt.gca().transAxes)
 
 # Set labels, title, and adjust layout
 plt.xlabel('Continent')
