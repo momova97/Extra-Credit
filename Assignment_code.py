@@ -124,46 +124,50 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 
 # Create a box plot
 plt.figure(figsize=(10, 6))
-box = plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values,
-                  vert=False, whis=1.5, showmeans=True, meanline=True, patch_artist=True)
 
-# Set x-axis ticks and labels
-plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
+# Create the box plot with mean indicators and descriptions
+bplot = plt.boxplot(
+    [group['Combined Mass (grams)'] for continent, group in filtered_df.groupby('Continent')],
+    vert=False,
+    showmeans=True,
+    meanprops=dict(marker='o', markeredgecolor='black', markersize=8),
+    patch_artist=True
+)
 
-# Set colors for the box plot
-colors = ['lightblue', 'lightgreen', 'lightyellow', 'lightpink', 'lightpurple', 'lightorange']
-for patch, color in zip(box['boxes'], colors):
-    patch.set_facecolor(color)
+# Set y-axis labels to continent names
+plt.yticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
 
-# Add descriptions and annotations for quantiles and mean line
-quantiles = [0.25, 0.5, 0.75]
-mean_position = 1
-min_position = -0.15
-max_position = -1.15
+# Add title and labels
+plt.xlabel('Mass (grams)')
+plt.ylabel('Continent')
+plt.title('Mass of Felis (Genus) Across Continents')
 
-for i, q in enumerate(quantiles):
-    plt.annotate(f'Q{int((i+1)*4)}: {round(np.quantile(filtered_df["Combined Mass (grams)"], q), 2)} g', 
-                 xy=(mean_position, (i + 1) * 0.25), color='black',
-                 ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-    
-plt.annotate(f'Mean: {round(filtered_df["Combined Mass (grams)"].mean(), 2)} g', 
-             xy=(mean_position, 1.05), color='black',
-             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-plt.annotate(f'Min: {round(filtered_df["Combined Mass (grams)"].min(), 2)} g', 
-             xy=(mean_position, min_position), color='black',
-             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-plt.annotate(f'Max: {round(filtered_df["Combined Mass (grams)"].max(), 2)} g', 
-             xy=(mean_position, max_position), color='black',
-             ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+# Add legend for mean indicators
+plt.legend([bplot["means"][0]], ['Mean'], loc="upper right")
 
-# Set labels, title, and adjust layout
-plt.xlabel('Continent')
-plt.ylabel('Mean Mass (grams)')
-plt.title('Mean Mass of Felis (Genus) Across Continents')
+# Add grid
+plt.grid()
+
+# Adjust layout
 plt.tight_layout()
 
 # Save the box plot as an image
-plt.savefig('felis_mean_mass_boxplot.png')
+plt.savefig('felis_mass_boxplot.png')
+
+# Filter data for rows with non-negative 'Combined Mass (grams)'
+filtered_df = df[df['Combined Mass (grams)'] >= 0]
+
+# Group b 'Genus' and count the number of unique 'Continent' values for each genus
+genus_continents_count = filtered_df.groupby('Genus')['Continent'].nunique()
+
+# Count the number of genera with more than one unique 'Continent' value
+genera_in_multiple_continents = (genus_continents_count > 1).sum()
+
+print(f"Number of genera found in multiple continents: {genera_in_multiple_continents}")
+
+# Filter data for Canis Genus
+canis_df = df[df['Genus'] == 'Canis']
+
 
 # Filter data for rows with non-negative 'Combined Mass (grams)'
 filtered_df = df[df['Combined Mass (grams)'] >= 0]
