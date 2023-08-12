@@ -119,4 +119,46 @@ plt.tight_layout()
 # Save the combined plot as an image
 plt.savefig('combined_charts.png')
 
+# Filter data for Carnivora Order, Felidae Family, and Felis Genus
+filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (df['Genus'] == 'Felis')]
 
+# Create a box plot
+plt.figure(figsize=(10, 6))
+plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False)
+plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
+plt.xlabel('Continent')
+plt.ylabel('Mean Mass (grams)')
+plt.title('Mean Mass of Felis (Genus) Across Continents')
+plt.tight_layout()
+
+# Save the box plot as an image
+plt.savefig('felis_mean_mass_boxplot.png')
+
+# Filter data for rows with non-negative 'Combined Mass (grams)'
+filtered_df = df[df['Combined Mass (grams)'] >= 0]
+
+# Group b 'Genus' and count the number of unique 'Continent' values for each genus
+genus_continents_count = filtered_df.groupby('Genus')['Continent'].nunique()
+
+# Count the number of genera with more than one unique 'Continent' value
+genera_in_multiple_continents = (genus_continents_count > 1).sum()
+
+print(f"Number of genera found in multiple continents: {genera_in_multiple_continents}")
+
+# Filter data for Canis Genus
+canis_df = df[df['Genus'] == 'Canis']
+
+# Convert 'Continent' column values to strings
+canis_df['Continent'] = canis_df['Continent'].astype(str)
+
+# Create a scatter plot
+plt.figure(figsize=(10, 6))
+plt.scatter(canis_df['Continent'], canis_df['Combined Mass (grams)'], alpha=0.7)
+plt.xlabel('Continent')
+plt.ylabel('Combined Mass (grams)')
+plt.title('Mass of Genus "Canis" Across Continents')
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save the scatter plot as an image
+plt.savefig('canis_mass_scatter_plot.png')
