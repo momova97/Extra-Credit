@@ -124,7 +124,7 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 
 # Create a box plot
 plt.figure(figsize=(10, 6))
-plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False, whis=1.5, showmeans=True, meanline=True, labels=filtered_df['Continent'].unique()
+plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False, whis=1.5, showmeans=True, meanline=True)
 plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
 plt.xlabel('Continent')
 plt.ylabel('Mean Mass (grams)')
