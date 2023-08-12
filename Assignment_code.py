@@ -85,20 +85,34 @@ grouped['mode'] = mode_series
 # Drop rows with NaN mass values
 grouped_cleaned = grouped.dropna()
 
-# Plot bar graphs
-plt.figure(figsize=(10, 6))
-x_labels = grouped_cleaned.index
-x_pos = np.arange(len(x_labels))
-# Plot the mean, median, and mode mass for each genus
-plt.bar(x_pos - 0.2, grouped_cleaned['mean'], yerr=grouped_cleaned['mean'].std(), width=0.2, label='Mean')
-plt.bar(x_pos, grouped_cleaned['median'], yerr=grouped_cleaned['median'].std(), width=0.2, label='Median')
-plt.bar(x_pos + 0.2, grouped_cleaned['mode'], width=0.2, label='Mode')
-# Add axis labels and title
-plt.xlabel('Genus')
-plt.ylabel('Mass (grams)')
-plt.title('Mean, Median, and Mode Mass of Each Genus in Pteropodidae Family')
-plt.xticks(x_pos, x_labels, rotation=45)
-plt.legend()
+# Create separate charts for mean, median, and mode
+fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+
+# Mean chart
+axs[0].bar(grouped_cleaned.index, grouped_cleaned['mean'], yerr=grouped_cleaned['mean'].std())
+axs[0].set_title('Mean Mass')
+axs[0].set_xlabel('Genus')
+axs[0].set_ylabel('Mass (grams)')
+axs[0].tick_params(axis='x', rotation=45)
+
+# Median chart
+axs[1].bar(grouped_cleaned.index, grouped_cleaned['median'], yerr=grouped_cleaned['median'].std())
+axs[1].set_title('Median Mass')
+axs[1].set_xlabel('Genus')
+axs[1].set_ylabel('Mass (grams)')
+axs[1].tick_params(axis='x', rotation=45)
+
+# Mode chart
+axs[2].bar(grouped_cleaned.index, grouped_cleaned['mode'])
+axs[2].set_title('Mode Mass')
+axs[2].set_xlabel('Genus')
+axs[2].set_ylabel('Mass (grams)')
+axs[2].tick_params(axis='x', rotation=45)
+
+# Adjust layout
 plt.tight_layout()
-#save the plot as a png file
-plt.savefig('plot.png')
+
+# Save the combined plot as an image
+plt.savefig('combined_charts.png')
+
+
