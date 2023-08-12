@@ -4,10 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-# Define the path to your dataset file
+# Define the path to the dataset file 
 dataset_file_path = "/workspaces/Extra-Credit/MOMv3.txt"
 
-# Define the headers you want to assign
+# Define the headers to assign to the dataset
 headers = [
     "Continent", "Status", "Order", "Family", "Genus", "Species",
     "Log Mass (grams)", "Combined Mass (grams)", "Reference"
@@ -15,9 +15,6 @@ headers = [
 
 # Read the dataset with assigned headers using Pandas
 df = pd.read_csv(dataset_file_path, sep='\t', header=None, names=headers)
-
-# Print the first few rows of the DataFrame to verify the headers
-print(df.head())
 
 
 # Print the first 5 rows of the dataset
@@ -75,34 +72,37 @@ grouped = filtered_df.groupby('Genus')['Combined Mass (grams)'].agg(['mean', 'me
 
 # Calculate mode manually for each genus
 def calculate_mode(series):
+    # Calculate mode using scipy's mode() function
+    # If mode is empty, return NaN, else return the first mode value
     return series.mode().iloc[0] if not series.mode().empty else np.nan
 
+# Apply the calculate_mode function to each genus and create a mode series
 mode_series = filtered_df.groupby('Genus')['Combined Mass (grams)'].apply(calculate_mode)
 
-# Combine mode results with other statistics
+# Combine mode results with mean and median statistics
 grouped['mode'] = mode_series
 
-# Drop rows with NaN mass values
+# Drop rows with NaN mass values, keeping only cleaned data
 grouped_cleaned = grouped.dropna()
 
-# Create subplots
+# Create subplots for mean, median, and mode
 fig, axs = plt.subplots(3, 1, figsize=(8, 18))
 
-# Mean chart
+# Plot the mean mass with standard deviation error bars
 axs[0].bar(grouped_cleaned.index, grouped_cleaned['mean'], yerr=grouped_cleaned['mean'].std())
 axs[0].set_title('Mean Mass')
 axs[0].set_xlabel('Genus')
 axs[0].set_ylabel('Mass (grams)')
 axs[0].tick_params(axis='x', rotation=45)
 
-# Median chart
+# Plot the median mass with standard deviation error bars
 axs[1].bar(grouped_cleaned.index, grouped_cleaned['median'], yerr=grouped_cleaned['median'].std())
 axs[1].set_title('Median Mass')
 axs[1].set_xlabel('Genus')
 axs[1].set_ylabel('Mass (grams)')
 axs[1].tick_params(axis='x', rotation=45)
 
-# Mode chart
+# Plot the mode mass
 axs[2].bar(grouped_cleaned.index, grouped_cleaned['mode'])
 axs[2].set_title('Mode Mass')
 axs[2].set_xlabel('Genus')
@@ -113,7 +113,7 @@ axs[2].tick_params(axis='x', rotation=45)
 for ax in axs:
     ax.set_ylabel('Mass (grams)')
 
-# Adjust layout
+# Adjust layout for better visualization
 plt.tight_layout()
 
 # Save the combined plot as an image
@@ -124,7 +124,7 @@ filtered_df = df[(df['Order'] == 'Carnivora') & (df['Family'] == 'Felidae') & (d
 
 # Create a box plot
 plt.figure(figsize=(10, 6))
-plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False)
+plt.boxplot(filtered_df.groupby('Continent')['Combined Mass (grams)'].mean().values, vert=False, whis=1.5, showmeans=True, meanline=True, labels=filtered_df['Continent'].unique()
 plt.xticks(range(1, len(filtered_df['Continent'].unique()) + 1), filtered_df['Continent'].unique())
 plt.xlabel('Continent')
 plt.ylabel('Mean Mass (grams)')
